@@ -1,31 +1,438 @@
-/* Estilos básicos para la tabla */
-#tabla-avisos {
+/* ============================================
+   RESET Y CONFIGURACIÓN GLOBAL MINIMALISTA
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #fafafa;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================
+   LAYOUT PRINCIPAL
+   ============================================ */
+
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 1.5rem;
+}
+
+/* ============================================
+   NAVEGACIÓN MINIMALISTA
+   ============================================ */
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    backdrop-filter: blur(10px);
+}
+
+nav a:hover {
+    background-color: rgba(255,255,255,0.2);
+    border-color: white;
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   CONTENIDO PRINCIPAL
+   ============================================ */
+
+main {
+    flex: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
 }
 
-#tabla-avisos th, #tabla-avisos td {
-    border: 1px solid #ddd;
-    padding: 8px;
+h2 {
+    font-size: 2rem;
+    font-weight: 300;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #34495e;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #666;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+/* ============================================
+   TABLAS MINIMALISTAS
+   ============================================ */
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 2rem;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+th, td {
+    padding: 1rem;
     text-align: left;
+    border-bottom: 1px solid #f0f0f0;
 }
 
-#tabla-avisos th {
-    background-color: #f2f2f2;
+th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-/* El cursor pointer indica que la fila es clickeable */
-#tabla-avisos tbody tr:hover {
-    background-color: #f5f5f5;
+tbody tr {
+    transition: all 0.3s ease;
+}
+
+tbody tr:hover {
+    background-color: #f8f9ff;
     cursor: pointer;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* --- ESTILOS PARA LOS MODALES (VISTA DETALLE Y FOTO GRANDE) --- */
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Imágenes en tablas */
+table img {
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+table img:hover {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   FORMULARIOS MINIMALISTAS
+   ============================================ */
+
+form {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-top: 2rem;
+}
+
+fieldset {
+    border: 2px solid #f0f0f0;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    transition: border-color 0.3s ease;
+}
+
+fieldset:hover {
+    border-color: #667eea;
+}
+
+legend {
+    font-weight: 600;
+    color: #495057;
+    padding: 0 1rem;
+    font-size: 1.1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+/* ============================================
+   SECCIONES DE ESTADÍSTICAS
+   ============================================ */
+
+.grafico-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.grafico-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #667eea, transparent);
+    margin: 3rem 0;
+}
+
+/* ============================================
+   FOOTER MINIMALISTA
+   ============================================ */
+
+footer {
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 2rem 1rem;
+    margin-top: auto;
+}
+
+footer p {
+    margin-bottom: 0.5rem;
+    color: #bdc3c7;
+}
+
+footer p:last-child {
+    margin-bottom: 0;
+    font-weight: 600;
+    color: white;
+}
+
+/* ============================================
+   ESTILOS ESPECÍFICOS POR PÁGINA
+   ============================================ */
+
+/* Mejoras para tabla de avisos específica */
+#tabla-avisos {
+    margin-top: 2rem;
+}
+
+#tabla-avisos tbody tr:hover {
+    background-color: #f8f9ff;
+    cursor: pointer;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Estilos para campos de error en formularios */
+.error {
+    border-color: #e74c3c !important;
+    background-color: #fdf2f2 !important;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* Estilos para elementos de éxito */
+.success {
+    border-color: #27ae60 !important;
+    background-color: #f2fdf3 !important;
+}
+
+.success-message {
+    color: #27ae60;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    display: block;
+}
+
+/* Animaciones sutiles */
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos para loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #667eea;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mejoras para elementos interactivos */
+.btn-secondary {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(149, 165, 166, 0.4);
+}
+
+/* Estilos para badges o etiquetas */
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
+    margin: 0.25rem;
+}
+
+/* Utilidades */
+.text-center {
+    text-align: center;
+}
+
+.mt-2 {
+    margin-top: 2rem;
+}
+
+.mb-2 {
+    margin-bottom: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+/* ============================================
+   MODALES MINIMALISTAS
+   ============================================ */
 
 /* Contenedor del modal (fondo oscuro) */
 .modal {
-    display: none; /* Oculto por defecto */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -33,57 +440,154 @@
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
 }
 
 /* Contenido de la caja del modal de detalle */
 .modal-contenido {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 700px;
-    border-radius: 8px;
+    background-color: white;
+    margin: 3% auto;
+    padding: 2rem;
+    border: none;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 /* Botón para cerrar (la 'X') */
 .cerrar-modal {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+    color: #95a5a6;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
-.cerrar-modal:hover,
-.cerrar-modal:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.cerrar-modal:hover {
+    color: #e74c3c;
+    background-color: #f8f9fa;
 }
 
 /* Estilos para la galería de fotos en el detalle */
+.galeria-fotos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
 .galeria-fotos img {
-    width: 320px;
+    width: 100%;
     height: 240px;
     object-fit: cover;
-    margin: 5px;
     cursor: pointer;
-    border: 2px solid #ddd;
-    border-radius: 4px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .galeria-fotos img:hover {
-    border-color: #007BFF;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
 /* Estilos para la foto grande en su propio modal */
 .modal-foto-grande {
     display: block;
     margin: auto;
-    width: 800px;
-    height: 600px;
     max-width: 90%;
     max-height: 90%;
-    margin-top: 5%;
+    margin-top: 2%;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    nav a {
+        display: block;
+        text-align: center;
+    }
+    
+    main {
+        padding: 2rem 1rem;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    th, td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .modal-contenido {
+        width: 95%;
+        margin: 5% auto;
+        padding: 1.5rem;
+    }
+    
+    .grafico-container {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        padding: 1.5rem 1rem;
+    }
+    
+    header h1 {
+        font-size: 1.75rem;
+    }
+    
+    main {
+        padding: 1.5rem 0.5rem;
+    }
+    
+    th, td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.8rem;
+    }
+    
+    button {
+        width: 100%;
+        margin-top: 1rem;
+    }
 }
