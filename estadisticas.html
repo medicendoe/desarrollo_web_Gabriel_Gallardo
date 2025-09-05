@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Adopción</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Estadísticas del Portal</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Volver a la Portada</a></li>
+                <li><a href="agregar-aviso.html">Agregar aviso de adopción</a></li>
+                <li><a href="listado-avisos.html">Ver listado de adopciones</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Visualización de Datos</h2>
+        <p>Aquí presentamos algunas estadísticas sobre los avisos de adopción registrados en nuestro portal.</p>
+
+        <section class="grafico-container">
+            <h3>Avisos de Adopción por Día</h3>
+            <p>Este gráfico muestra la tendencia de nuevos avisos publicados durante la última semana.</p>
+            <img 
+                src="https://quickchart.io/chart?c=%7B%22type%22%3A%22line%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Lunes%22%2C%22Martes%22%2C%22Mi%5Cu00e9rcoles%22%2C%22Jueves%22%2C%22Viernes%22%2C%22S%5Cu00e1bado%22%2C%22Domingo%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Avisos%20de%20Adopci%5Cu00f3n%22%2C%22data%22%3A%5B5%2C8%2C3%2C6%2C9%2C7%2C10%5D%2C%22fill%22%3Afalse%2C%22borderColor%22%3A%22rgb%2875%2C%20192%2C%20192%29%22%2C%22tension%22%3A0.1%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Avisos%20de%20Adopci%5Cu00f3n%20por%20D%5Cu00eda%22%7D%7D%7D" 
+                alt="Gráfico de líneas que muestra la cantidad de avisos de adopción por día."
+                style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+        </section>
+
+        <hr>
+
+        <section class="grafico-container">
+            <h3>Distribución por Tipo de Mascota</h3>
+            <p>Este gráfico muestra el porcentaje total de avisos correspondientes a gatos y perros.</p>
+            <img 
+                src="https://quickchart.io/chart?c=%7B%22type%22%3A%22pie%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Gatos%22%2C%22Perros%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Tipos%20de%20Mascota%22%2C%22data%22%3A%5B65%2C80%5D%2C%22backgroundColor%22%3A%5B%22rgba%28255%2C%2099%2C%20132%2C%200.8%29%22%2C%22rgba%2854%2C%20162%2C%20235%2C%200.8%29%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Distribuci%5Cu00f3n%20por%20Tipo%20de%20Mascota%22%7D%7D%7D" 
+                alt="Gráfico de torta que muestra el total de avisos por tipo de mascota (gato o perro)."
+                style="max-width: 100%; max-height: 400px; height: auto; border: 1px solid #ccc;">
+        </section>
+
+        <hr>
+
+        <section class="grafico-container">
+            <h3>Comparativa Mensual de Adopciones</h3>
+            <p>Este gráfico compara la cantidad de avisos de gatos versus perros publicados cada mes.</p>
+            <img 
+                src="https://quickchart.io/chart?c=%7B%22type%22%3A%22bar%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Enero%22%2C%22Febrero%22%2C%22Marzo%22%2C%22Abril%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Gatos%22%2C%22data%22%3A%5B20%2C25%2C30%2C22%5D%2C%22backgroundColor%22%3A%22rgba%28255%2C%2099%2C%20132%2C%200.8%29%22%7D%2C%7B%22label%22%3A%22Perros%22%2C%22data%22%3A%5B35%2C30%2C28%2C40%5D%2C%22backgroundColor%22%3A%22rgba%2854%2C%20162%2C%20235%2C%200.8%29%22%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Comparativa%20Mensual%20de%20Adopciones%22%7D%2C%22scales%22%3A%7B%22yAxes%22%3A%5B%7B%22ticks%22%3A%7B%22beginAtZero%22%3Atrue%7D%7D%5D%7D%7D%7D" 
+                alt="Gráfico de barras que compara la cantidad de avisos de gatos y perros por mes."
+                style="max-width: 100%; height: auto; border: 1px solid #ccc;">
+        </section>
+        
+        <hr>
+
+        <div class="navegacion-final">
+            <a href="index.html">Volver a la Portada Principal</a>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>Desarrollo de Aplicaciones Web - Tarea 1</p>
+    </footer>
+
+</body>
+</html>
