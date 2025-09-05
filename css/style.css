@@ -1,0 +1,89 @@
+/* Estilos básicos para la tabla */
+#tabla-avisos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#tabla-avisos th, #tabla-avisos td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#tabla-avisos th {
+    background-color: #f2f2f2;
+}
+
+/* El cursor pointer indica que la fila es clickeable */
+#tabla-avisos tbody tr:hover {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+/* --- ESTILOS PARA LOS MODALES (VISTA DETALLE Y FOTO GRANDE) --- */
+
+/* Contenedor del modal (fondo oscuro) */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Contenido de la caja del modal de detalle */
+.modal-contenido {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 700px;
+    border-radius: 8px;
+}
+
+/* Botón para cerrar (la 'X') */
+.cerrar-modal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.cerrar-modal:hover,
+.cerrar-modal:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Estilos para la galería de fotos en el detalle */
+.galeria-fotos img {
+    width: 320px;
+    height: 240px;
+    object-fit: cover;
+    margin: 5px;
+    cursor: pointer;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+}
+
+.galeria-fotos img:hover {
+    border-color: #007BFF;
+}
+
+/* Estilos para la foto grande en su propio modal */
+.modal-foto-grande {
+    display: block;
+    margin: auto;
+    width: 800px;
+    height: 600px;
+    max-width: 90%;
+    max-height: 90%;
+    margin-top: 5%;
+}
