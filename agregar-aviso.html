@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Aviso de Adopción</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Publicar un Nuevo Aviso de Adopción</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Volver a la Portada</a></li>
+                <li><a href="listado-avisos.html">Ver listado de adopciones</a></li>
+                <li><a href="estadisticas.html">Estadísticas</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <form id="adoption-form" novalidate>
+
+            <fieldset>
+                <legend>¿Dónde?: Información del Lugar de Entrega</legend>
+
+                <div class="form-group">
+                    <label for="region">Región:</label>
+                    <select id="region" name="region">
+                        <option value="">Seleccione una región</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comuna">Comuna:</label>
+                    <select id="comuna" name="comuna">
+                        <option value="">Seleccione una comuna</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sector">Sector:</label>
+                    <input type="text" id="sector" name="sector" maxlength="100" placeholder="Ej: Cerca del Metro Santa Lucía">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>¿Contacto de esta publicación?:</legend>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" minlength="3" maxlength="200" placeholder="Tu nombre completo">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" maxlength="100" placeholder="tu.correo@ejemplo.com">
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">Número de celular:</label>
+                    <input type="tel" id="celular" name="celular" placeholder="+56912345678">
+                </div>
+                
+                <div class="form-group">
+                    <label for="red-social">Contactar por:</label>
+                    <select id="red-social" name="red-social">
+                        <option value="">Seleccione una red</option>
+                        <option value="whatsapp">Whatsapp</option>
+                        <option value="telegram">Telegram</option>
+                        <option value="x">X (Twitter)</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="otra">Otra</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="contact-url-group" style="display: none;">
+                    <label for="contact-url">ID o URL de contacto:</label>
+                    <input type="text" id="contact-url" name="contact-url" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>¿Qué mascota ofrece en adopción?:</legend>
+
+                <div class="form-group">
+                    <label for="tipo-mascota">Tipo:</label>
+                    <select id="tipo-mascota" name="tipo-mascota">
+                        <option value="">Seleccione tipo</option>
+                        <option value="gato">Gato</option>
+                        <option value="perro">Perro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" value="1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad" name="edad" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="unidad-edad">Unidad de medida de la edad:</label>
+                    <select id="unidad-edad" name="unidad-edad">
+                        <option value="">Seleccione unidad</option>
+                        <option value="meses">Meses</option>
+                        <option value="anios">Años</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha-entrega">Fecha disponible para entrega:</label>
+                    <input type="datetime-local" id="fecha-entrega" name="fecha-entrega">
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" cols="50" rows="10" placeholder="Cuenta un poco sobre la mascota, su carácter, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="foto">Foto:</label>
+                    <div id="photo-inputs-container">
+                        <input type="file" name="fotos[]" accept="image/*">
+                    </div>
+                    <button type="button" id="add-photo-btn">Agregar otra foto</button>
+                </div>
+            </fieldset>
+            
+            <button type="submit" id="submit-btn">Agregar este aviso de adopción</button>
+
+        </form>
+    </main>
+
+    <footer>
+        <p>Desarrollo de Aplicaciones Web - Tarea 1</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    </body>
+</html>
