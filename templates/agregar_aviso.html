@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Aviso de Adopción</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -12,23 +12,36 @@
         <h1>Publicar un Nuevo Aviso de Adopción</h1>
         <nav>
             <ul>
-                <li><a href="index.html">Volver a la Portada</a></li>
-                <li><a href="listado-avisos.html">Ver listado de adopciones</a></li>
-                <li><a href="estadisticas.html">Estadísticas</a></li>
+                <li><a href="{{ url_for('index') }}">Volver a la Portada</a></li>
+                <li><a href="{{ url_for('listado_avisos') }}">Ver listado de adopciones</a></li>
+                <li><a href="{{ url_for('estadisticas') }}">Estadísticas</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <form id="adoption-form" novalidate>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form id="adoption-form" method="POST" enctype="multipart/form-data" novalidate>
 
             <fieldset>
                 <legend>¿Dónde?: Información del Lugar de Entrega</legend>
 
                 <div class="form-group">
                     <label for="region">Región:</label>
-                    <select id="region" name="region">
+                    <select id="region" name="region" onchange="cargarComunas()">
                         <option value="">Seleccione una región</option>
+                        {% for region in regiones %}
+                        <option value="{{ region.id }}">{{ region.nombre }}</option>
+                        {% endfor %}
                     </select>
                 </div>
 
@@ -65,20 +78,20 @@
                 
                 <div class="form-group">
                     <label for="red-social">Contactar por:</label>
-                    <select id="red-social" name="red-social">
+                    <select id="red-social" name="contacto_nombre[]">
                         <option value="">Seleccione una red</option>
                         <option value="whatsapp">Whatsapp</option>
                         <option value="telegram">Telegram</option>
-                        <option value="x">X (Twitter)</option>
+                        <option value="X">X (Twitter)</option>
                         <option value="instagram">Instagram</option>
                         <option value="tiktok">TikTok</option>
                         <option value="otra">Otra</option>
                     </select>
                 </div>
 
-                <div class="form-group" id="contact-url-group" style="display: none;">
+                <div class="form-group" id="contact-url-group">
                     <label for="contact-url">ID o URL de contacto:</label>
-                    <input type="text" id="contact-url" name="contact-url" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                    <input type="text" id="contact-url" name="contacto_id[]" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
                 </div>
             </fieldset>
 
@@ -87,7 +100,7 @@
 
                 <div class="form-group">
                     <label for="tipo-mascota">Tipo:</label>
-                    <select id="tipo-mascota" name="tipo-mascota">
+                    <select id="tipo-mascota" name="tipo">
                         <option value="">Seleccione tipo</option>
                         <option value="gato">Gato</option>
                         <option value="perro">Perro</option>
@@ -106,16 +119,16 @@
 
                 <div class="form-group">
                     <label for="unidad-edad">Unidad de medida de la edad:</label>
-                    <select id="unidad-edad" name="unidad-edad">
+                    <select id="unidad-edad" name="unidad_medida">
                         <option value="">Seleccione unidad</option>
-                        <option value="meses">Meses</option>
-                        <option value="anios">Años</option>
+                        <option value="m">Meses</option>
+                        <option value="a">Años</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="fecha-entrega">Fecha disponible para entrega:</label>
-                    <input type="datetime-local" id="fecha-entrega" name="fecha-entrega">
+                    <input type="datetime-local" id="fecha-entrega" name="fecha_entrega">
                 </div>
 
                 <div class="form-group">
@@ -126,7 +139,7 @@
                 <div class="form-group">
                     <label for="foto">Foto:</label>
                     <div id="photo-inputs-container">
-                        <input type="file" id="foto" name="fotos[]" accept="image/*">
+                        <input type="file" id="foto" name="fotos" accept="image/*" multiple>
                     </div>
                     <button type="button" id="add-photo-btn">Agregar otra foto</button>
                 </div>
@@ -139,8 +152,39 @@
 
     <footer>
         <p>Desarrollo de Aplicaciones Web - Tarea 1</p>
+        <p>Gabriel Gallardo R.</p>
     </footer>
 
-    <script src="js/main.js"></script>
-    </body>
+    <script>
+        function cargarComunas() {
+            const regionSelect = document.getElementById('region');
+            const comunaSelect = document.getElementById('comuna');
+            const regionId = regionSelect.value;
+            
+            // Limpiar comunas
+            comunaSelect.innerHTML = '<option value="">Cargando...</option>';
+            
+            if (regionId) {
+                fetch(`/api/comunas/${regionId}`)
+                    .then(response => response.json())
+                    .then(comunas => {
+                        comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+                        comunas.forEach(comuna => {
+                            const option = document.createElement('option');
+                            option.value = comuna.id;
+                            option.textContent = comuna.nombre;
+                            comunaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        comunaSelect.innerHTML = '<option value="">Error al cargar comunas</option>';
+                    });
+            } else {
+                comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+            }
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
 </html>

@@ -2,7 +2,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. BASE DE DATOS DE EJEMPLO ---
-    // Como no hay servidor, creamos los datos aquí mismo en un array de objetos.
+    // Como fallback, usamos datos estáticos si no hay conexión con el servidor
     const datosAvisos = {
         "1": {
             nombre: "Ana González",

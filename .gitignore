@@ -1,1 +1,6 @@
+.venv
 .env
+.devbox
+__pycache__
+devbox*
+devbox.d
