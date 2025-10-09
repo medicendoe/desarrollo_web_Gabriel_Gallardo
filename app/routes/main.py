@@ -39,6 +39,8 @@ def agregar_aviso():
         tipo = request.form.get('tipo', '')
         descripcion = request.form.get('descripcion', '').strip()
         fecha_entrega = request.form.get('fecha-entrega', '')
+        cantidad_str = request.form.get('cantidad', '1')
+        edad_str = request.form.get('edad', '1')
         
         # Validaciones del servidor
         errors = []
@@ -59,9 +61,38 @@ def agregar_aviso():
         if not fecha_entrega:
             errors.append('Debe especificar una fecha de entrega')
         
-        # Validar que al menos un medio de contacto esté presente
-        if not celular:
-            errors.append('El número de celular es obligatorio como medio de contacto')
+        # Validar cantidad como número entero
+        try:
+            cantidad = int(float(cantidad_str))
+            if cantidad < 1 or cantidad > 20:
+                errors.append('La cantidad debe ser un número entero entre 1 y 20')
+        except (ValueError, TypeError):
+            errors.append('La cantidad debe ser un número entero válido')
+            cantidad = 1
+        
+        # Validar edad como número entero
+        try:
+            edad = int(float(edad_str))
+            if edad < 1:
+                errors.append('La edad debe ser un número mayor a 0')
+        except (ValueError, TypeError):
+            errors.append('La edad debe ser un número entero válido')
+            edad = 1
+        
+        # Validar que haya al menos un medio de contacto
+        contactos_adicionales_nombres = request.form.getlist('contacto_nombre[]')
+        contactos_adicionales_ids = request.form.getlist('contacto_id[]')
+        
+        has_valid_contact = email or celular
+        
+        # Verificar contactos adicionales válidos
+        for i, (nombre_contacto, id_contacto) in enumerate(zip(contactos_adicionales_nombres, contactos_adicionales_ids)):
+            if nombre_contacto and id_contacto.strip():
+                has_valid_contact = True
+                break
+        
+        if not has_valid_contact:
+            errors.append('Debe proporcionar al menos un medio de contacto válido')
         
         # Si hay errores, mostrarlos
         if errors:
@@ -82,8 +113,8 @@ def agregar_aviso():
                 email=email,
                 celular=celular or None,
                 tipo=tipo,
-                cantidad=int(request.form.get('cantidad', 1)),
-                edad=int(request.form.get('edad', 1)),
+                cantidad=cantidad,
+                edad=edad,
                 unidad_medida=request.form.get('unidad-edad', 'm'),
                 fecha_entrega=fecha_entrega_dt,
                 descripcion=descripcion,
@@ -93,21 +124,33 @@ def agregar_aviso():
             db.session.add(nuevo_aviso)
             db.session.flush()  # Para obtener el ID
             
-            # Agregar contacto por email
-            contacto_email = ContactarPor(
-                actividad_id=nuevo_aviso.id,
-                nombre='otra',  # Usar 'otra' para email
-                identificador=email
-            )
-            db.session.add(contacto_email)
+            # Agregar contacto por email (siempre presente por validación)
+            if email:
+                contacto_email = ContactarPor(
+                    actividad_id=nuevo_aviso.id,
+                    nombre='otra',  # Usar 'otra' para email
+                    identificador=f"Email: {email}"
+                )
+                db.session.add(contacto_email)
             
-            # Agregar contacto por celular
-            contacto_celular = ContactarPor(
-                actividad_id=nuevo_aviso.id,
-                nombre='otra',  # Usar 'otra' para celular
-                identificador=celular
-            )
-            db.session.add(contacto_celular)
+            # Agregar contacto por celular si está presente
+            if celular:
+                contacto_celular = ContactarPor(
+                    actividad_id=nuevo_aviso.id,
+                    nombre='otra',  # Usar 'otra' para celular
+                    identificador=f"Celular: {celular}"
+                )
+                db.session.add(contacto_celular)
+            
+            # Agregar contactos adicionales
+            for i, (nombre_contacto, id_contacto) in enumerate(zip(contactos_adicionales_nombres, contactos_adicionales_ids)):
+                if nombre_contacto and id_contacto.strip():
+                    contacto_adicional = ContactarPor(
+                        actividad_id=nuevo_aviso.id,
+                        nombre=nombre_contacto,
+                        identificador=id_contacto.strip()
+                    )
+                    db.session.add(contacto_adicional)
             
             # Manejar archivos de foto
             fotos = request.files.getlist('fotos')

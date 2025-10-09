@@ -5,6 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agregar Aviso de Adopción</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .contacto-tipo {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .contacto-id {
+            flex: 2;
+            min-width: 200px;
+        }
+        
+        .btn-remove-contacto {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn-remove-contacto:hover {
+            background-color: #c82333;
+        }
+        
+        #btn-add-contacto {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        #btn-add-contacto:hover {
+            background-color: #218838;
+        }
+        
+        .validation-message {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        input:invalid {
+            border-color: #dc3545;
+        }
+        
+        input:valid {
+            border-color: #28a745;
+        }
+    </style>
 </head>
 <body>
 
@@ -63,12 +126,12 @@
 
                 <div class="form-group">
                     <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" minlength="3" maxlength="200" placeholder="Tu nombre completo">
+                    <input type="text" id="nombre" name="nombre" minlength="3" maxlength="200" placeholder="Tu nombre completo" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" maxlength="100" placeholder="tu.correo@ejemplo.com">
+                    <input type="email" id="email" name="email" maxlength="100" placeholder="tu.correo@ejemplo.com" required>
                 </div>
 
                 <div class="form-group">
@@ -76,22 +139,25 @@
                     <input type="tel" id="celular" name="celular" placeholder="+56912345678">
                 </div>
                 
+                <!-- Contenedor para múltiples medios de contacto -->
                 <div class="form-group">
-                    <label for="red-social">Contactar por:</label>
-                    <select id="red-social" name="contacto_nombre[]">
-                        <option value="">Seleccione una red</option>
-                        <option value="whatsapp">Whatsapp</option>
-                        <option value="telegram">Telegram</option>
-                        <option value="X">X (Twitter)</option>
-                        <option value="instagram">Instagram</option>
-                        <option value="tiktok">TikTok</option>
-                        <option value="otra">Otra</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="contact-url-group">
-                    <label for="contact-url">ID o URL de contacto:</label>
-                    <input type="text" id="contact-url" name="contacto_id[]" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                    <label>Medios de contacto adicionales:</label>
+                    <div id="contactos-container">
+                        <div class="contacto-item">
+                            <select name="contacto_nombre[]" class="contacto-tipo">
+                                <option value="">Seleccione un medio</option>
+                                <option value="whatsapp">Whatsapp</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="X">X (Twitter)</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                            <input type="text" name="contacto_id[]" class="contacto-id" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                            <button type="button" class="btn-remove-contacto" onclick="removeContacto(this)" style="display: none;">Eliminar</button>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-add-contacto" onclick="addContacto()">+ Agregar otro medio de contacto</button>
                 </div>
             </fieldset>
 
@@ -100,7 +166,7 @@
 
                 <div class="form-group">
                     <label for="tipo-mascota">Tipo:</label>
-                    <select id="tipo-mascota" name="tipo">
+                    <select id="tipo-mascota" name="tipo" required>
                         <option value="">Seleccione tipo</option>
                         <option value="gato">Gato</option>
                         <option value="perro">Perro</option>
@@ -108,18 +174,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" min="1" value="1">
+                    <label for="cantidad">Cantidad de mascotas:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" max="20" step="1" value="1" required 
+                           oninput="validateCantidad(this)" 
+                           title="Debe ser un número entero entre 1 y 20">
+                    <small class="validation-message" id="cantidad-message" style="color: red; display: none;">
+                        Debe ser un número entero entre 1 y 20
+                    </small>
                 </div>
                 
                 <div class="form-group">
                     <label for="edad">Edad:</label>
-                    <input type="number" id="edad" name="edad" min="1">
+                    <input type="number" id="edad" name="edad" min="1" max="30" step="1" required>
                 </div>
 
                 <div class="form-group">
                     <label for="unidad-edad">Unidad de medida de la edad:</label>
-                    <select id="unidad-edad" name="unidad_medida">
+                    <select id="unidad-edad" name="unidad_medida" required>
                         <option value="">Seleccione unidad</option>
                         <option value="m">Meses</option>
                         <option value="a">Años</option>
@@ -128,7 +199,7 @@
 
                 <div class="form-group">
                     <label for="fecha-entrega">Fecha disponible para entrega:</label>
-                    <input type="datetime-local" id="fecha-entrega" name="fecha_entrega">
+                    <input type="datetime-local" id="fecha-entrega" name="fecha_entrega" required>
                 </div>
 
                 <div class="form-group">
@@ -184,6 +255,111 @@
                 comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
             }
         }
+
+        // Función para validar cantidad como número entero
+        function validateCantidad(input) {
+            const value = parseInt(input.value);
+            const message = document.getElementById('cantidad-message');
+            
+            if (isNaN(value) || value < 1 || value > 20 || !Number.isInteger(parseFloat(input.value))) {
+                input.setCustomValidity('Debe ser un número entero entre 1 y 20');
+                message.style.display = 'block';
+                input.style.borderColor = 'red';
+            } else {
+                input.setCustomValidity('');
+                message.style.display = 'none';
+                input.style.borderColor = '';
+            }
+        }
+
+        // Función para agregar un nuevo medio de contacto
+        function addContacto() {
+            const container = document.getElementById('contactos-container');
+            const newContacto = document.createElement('div');
+            newContacto.className = 'contacto-item';
+            
+            newContacto.innerHTML = `
+                <select name="contacto_nombre[]" class="contacto-tipo">
+                    <option value="">Seleccione un medio</option>
+                    <option value="whatsapp">Whatsapp</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="X">X (Twitter)</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="otra">Otra</option>
+                </select>
+                <input type="text" name="contacto_id[]" class="contacto-id" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                <button type="button" class="btn-remove-contacto" onclick="removeContacto(this)">Eliminar</button>
+            `;
+            
+            container.appendChild(newContacto);
+            updateRemoveButtons();
+        }
+
+        // Función para eliminar un medio de contacto
+        function removeContacto(button) {
+            const container = document.getElementById('contactos-container');
+            const contactoItem = button.parentNode;
+            
+            if (container.children.length > 1) {
+                container.removeChild(contactoItem);
+                updateRemoveButtons();
+            }
+        }
+
+        // Función para actualizar la visibilidad de los botones de eliminar
+        function updateRemoveButtons() {
+            const container = document.getElementById('contactos-container');
+            const removeButtons = container.querySelectorAll('.btn-remove-contacto');
+            
+            removeButtons.forEach((button, index) => {
+                button.style.display = container.children.length > 1 ? 'inline-block' : 'none';
+            });
+        }
+
+        // Validación adicional del formulario antes del envío
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('adoption-form');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Validar cantidad
+                    const cantidadInput = document.getElementById('cantidad');
+                    const cantidad = parseInt(cantidadInput.value);
+                    
+                    if (isNaN(cantidad) || cantidad < 1 || cantidad > 20 || !Number.isInteger(parseFloat(cantidadInput.value))) {
+                        e.preventDefault();
+                        alert('La cantidad debe ser un número entero entre 1 y 20');
+                        cantidadInput.focus();
+                        return false;
+                    }
+
+                    // Validar que haya al menos un medio de contacto válido (email, celular, o contacto adicional)
+                    const email = document.getElementById('email').value.trim();
+                    const celular = document.getElementById('celular').value.trim();
+                    const contactosAdicionales = document.querySelectorAll('select[name="contacto_nombre[]"]');
+                    
+                    let hasValidContact = email || celular;
+                    
+                    if (!hasValidContact) {
+                        // Verificar contactos adicionales
+                        contactosAdicionales.forEach((select, index) => {
+                            const tipo = select.value;
+                            const id = document.querySelectorAll('input[name="contacto_id[]"]')[index]?.value.trim();
+                            if (tipo && id) {
+                                hasValidContact = true;
+                            }
+                        });
+                    }
+
+                    if (!hasValidContact) {
+                        e.preventDefault();
+                        alert('Debe proporcionar al menos un medio de contacto (email, celular, o contacto adicional)');
+                        return false;
+                    }
+                });
+            }
+        });
     </script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
