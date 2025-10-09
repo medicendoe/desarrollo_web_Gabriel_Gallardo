@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Aviso de Adopción</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .contacto-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        
+        .contacto-tipo {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .contacto-id {
+            flex: 2;
+            min-width: 200px;
+        }
+        
+        .btn-remove-contacto {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .btn-remove-contacto:hover {
+            background-color: #c82333;
+        }
+        
+        #btn-add-contacto {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        #btn-add-contacto:hover {
+            background-color: #218838;
+        }
+        
+        .validation-message {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        input:invalid {
+            border-color: #dc3545;
+        }
+        
+        input:valid {
+            border-color: #28a745;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Publicar un Nuevo Aviso de Adopción</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('main.index') }}">Volver a la Portada</a></li>
+                <li><a href="{{ url_for('main.listado_avisos') }}">Ver listado de adopciones</a></li>
+                <li><a href="{{ url_for('main.estadisticas') }}">Estadísticas</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <form id="adoption-form" method="POST" enctype="multipart/form-data" novalidate>
+
+            <fieldset>
+                <legend>¿Dónde?: Información del Lugar de Entrega</legend>
+
+                <div class="form-group">
+                    <label for="region">Región:</label>
+                    <select id="region" name="region" onchange="cargarComunas()">
+                        <option value="">Seleccione una región</option>
+                        {% for region in regiones %}
+                        <option value="{{ region.id }}">{{ region.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comuna">Comuna:</label>
+                    <select id="comuna" name="comuna">
+                        <option value="">Seleccione una comuna</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sector">Sector:</label>
+                    <input type="text" id="sector" name="sector" maxlength="100" placeholder="Ej: Cerca del Metro Santa Lucía">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>¿Contacto de esta publicación?:</legend>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" minlength="3" maxlength="200" placeholder="Tu nombre completo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" maxlength="100" placeholder="tu.correo@ejemplo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="celular">Número de celular:</label>
+                    <input type="tel" id="celular" name="celular" placeholder="+56912345678">
+                </div>
+                
+                <!-- Contenedor para múltiples medios de contacto -->
+                <div class="form-group">
+                    <label>Medios de contacto adicionales:</label>
+                    <div id="contactos-container">
+                        <div class="contacto-item">
+                            <select name="contacto_nombre[]" class="contacto-tipo">
+                                <option value="">Seleccione un medio</option>
+                                <option value="whatsapp">Whatsapp</option>
+                                <option value="telegram">Telegram</option>
+                                <option value="X">X (Twitter)</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="otra">Otra</option>
+                            </select>
+                            <input type="text" name="contacto_id[]" class="contacto-id" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                            <button type="button" class="btn-remove-contacto" onclick="removeContacto(this)" style="display: none;">Eliminar</button>
+                        </div>
+                    </div>
+                    <button type="button" id="btn-add-contacto" onclick="addContacto()">+ Agregar otro medio de contacto</button>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>¿Qué mascota ofrece en adopción?:</legend>
+
+                <div class="form-group">
+                    <label for="tipo-mascota">Tipo:</label>
+                    <select id="tipo-mascota" name="tipo" required>
+                        <option value="">Seleccione tipo</option>
+                        <option value="gato">Gato</option>
+                        <option value="perro">Perro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad">Cantidad de mascotas:</label>
+                    <input type="number" id="cantidad" name="cantidad" min="1" max="20" step="1" value="1" required 
+                           oninput="validateCantidad(this)" 
+                           title="Debe ser un número entero entre 1 y 20">
+                    <small class="validation-message" id="cantidad-message" style="color: red; display: none;">
+                        Debe ser un número entero entre 1 y 20
+                    </small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="edad">Edad:</label>
+                    <input type="number" id="edad" name="edad" min="1" max="30" step="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="unidad-edad">Unidad de medida de la edad:</label>
+                    <select id="unidad-edad" name="unidad_medida" required>
+                        <option value="">Seleccione unidad</option>
+                        <option value="m">Meses</option>
+                        <option value="a">Años</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha-entrega">Fecha disponible para entrega:</label>
+                    <input type="datetime-local" id="fecha-entrega" name="fecha_entrega" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" name="descripcion" cols="50" rows="10" placeholder="Cuenta un poco sobre la mascota, su carácter, etc."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="foto">Foto:</label>
+                    <div id="photo-inputs-container">
+                        <input type="file" id="foto" name="fotos" accept="image/*" multiple>
+                    </div>
+                    <button type="button" id="add-photo-btn">Agregar otra foto</button>
+                </div>
+            </fieldset>
+            
+            <button type="submit" id="submit-btn">Agregar este aviso de adopción</button>
+
+        </form>
+    </main>
+
+    <footer>
+        <p>Desarrollo de Aplicaciones Web - Tarea 1</p>
+        <p>Gabriel Gallardo R.</p>
+    </footer>
+
+    <script>
+        function cargarComunas() {
+            const regionSelect = document.getElementById('region');
+            const comunaSelect = document.getElementById('comuna');
+            const regionId = regionSelect.value;
+            
+            // Limpiar comunas
+            comunaSelect.innerHTML = '<option value="">Cargando...</option>';
+            
+            if (regionId) {
+                fetch(`/api/comunas/${regionId}`)
+                    .then(response => response.json())
+                    .then(comunas => {
+                        comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+                        comunas.forEach(comuna => {
+                            const option = document.createElement('option');
+                            option.value = comuna.id;
+                            option.textContent = comuna.nombre;
+                            comunaSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        comunaSelect.innerHTML = '<option value="">Error al cargar comunas</option>';
+                    });
+            } else {
+                comunaSelect.innerHTML = '<option value="">Seleccione una comuna</option>';
+            }
+        }
+
+        // Función para validar cantidad como número entero
+        function validateCantidad(input) {
+            const value = parseInt(input.value);
+            const message = document.getElementById('cantidad-message');
+            
+            if (isNaN(value) || value < 1 || value > 20 || !Number.isInteger(parseFloat(input.value))) {
+                input.setCustomValidity('Debe ser un número entero entre 1 y 20');
+                message.style.display = 'block';
+                input.style.borderColor = 'red';
+            } else {
+                input.setCustomValidity('');
+                message.style.display = 'none';
+                input.style.borderColor = '';
+            }
+        }
+
+        // Función para agregar un nuevo medio de contacto
+        function addContacto() {
+            const container = document.getElementById('contactos-container');
+            const newContacto = document.createElement('div');
+            newContacto.className = 'contacto-item';
+            
+            newContacto.innerHTML = `
+                <select name="contacto_nombre[]" class="contacto-tipo">
+                    <option value="">Seleccione un medio</option>
+                    <option value="whatsapp">Whatsapp</option>
+                    <option value="telegram">Telegram</option>
+                    <option value="X">X (Twitter)</option>
+                    <option value="instagram">Instagram</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="otra">Otra</option>
+                </select>
+                <input type="text" name="contacto_id[]" class="contacto-id" minlength="4" maxlength="50" placeholder="Ej: @usuario o URL completa">
+                <button type="button" class="btn-remove-contacto" onclick="removeContacto(this)">Eliminar</button>
+            `;
+            
+            container.appendChild(newContacto);
+            updateRemoveButtons();
+        }
+
+        // Función para eliminar un medio de contacto
+        function removeContacto(button) {
+            const container = document.getElementById('contactos-container');
+            const contactoItem = button.parentNode;
+            
+            if (container.children.length > 1) {
+                container.removeChild(contactoItem);
+                updateRemoveButtons();
+            }
+        }
+
+        // Función para actualizar la visibilidad de los botones de eliminar
+        function updateRemoveButtons() {
+            const container = document.getElementById('contactos-container');
+            const removeButtons = container.querySelectorAll('.btn-remove-contacto');
+            
+            removeButtons.forEach((button, index) => {
+                button.style.display = container.children.length > 1 ? 'inline-block' : 'none';
+            });
+        }
+
+        // Validación adicional del formulario antes del envío
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('adoption-form');
+            
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Validar cantidad
+                    const cantidadInput = document.getElementById('cantidad');
+                    const cantidad = parseInt(cantidadInput.value);
+                    
+                    if (isNaN(cantidad) || cantidad < 1 || cantidad > 20 || !Number.isInteger(parseFloat(cantidadInput.value))) {
+                        e.preventDefault();
+                        alert('La cantidad debe ser un número entero entre 1 y 20');
+                        cantidadInput.focus();
+                        return false;
+                    }
+
+                    // Validar que haya al menos un medio de contacto válido (email, celular, o contacto adicional)
+                    const email = document.getElementById('email').value.trim();
+                    const celular = document.getElementById('celular').value.trim();
+                    const contactosAdicionales = document.querySelectorAll('select[name="contacto_nombre[]"]');
+                    
+                    let hasValidContact = email || celular;
+                    
+                    if (!hasValidContact) {
+                        // Verificar contactos adicionales
+                        contactosAdicionales.forEach((select, index) => {
+                            const tipo = select.value;
+                            const id = document.querySelectorAll('input[name="contacto_id[]"]')[index]?.value.trim();
+                            if (tipo && id) {
+                                hasValidContact = true;
+                            }
+                        });
+                    }
+
+                    if (!hasValidContact) {
+                        e.preventDefault();
+                        alert('Debe proporcionar al menos un medio de contacto (email, celular, o contacto adicional)');
+                        return false;
+                    }
+                });
+            }
+        });
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
