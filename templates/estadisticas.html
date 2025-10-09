@@ -12,9 +12,9 @@
         <h1>Estadísticas del Portal</h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('index') }}">Volver a la Portada</a></li>
-                <li><a href="{{ url_for('agregar_aviso') }}">Agregar aviso de adopción</a></li>
-                <li><a href="{{ url_for('listado_avisos') }}">Ver listado de adopciones</a></li>
+                <li><a href="{{ url_for('main.index') }}">Volver a la Portada</a></li>
+                <li><a href="{{ url_for('main.agregar_aviso') }}">Agregar aviso de adopción</a></li>
+                <li><a href="{{ url_for('main.listado_avisos') }}">Ver listado de adopciones</a></li>
             </ul>
         </nav>
     </header>
@@ -76,7 +76,7 @@
         <hr>
 
         <div class="navegacion-final">
-            <a href="{{ url_for('index') }}">Volver a la Portada Principal</a>
+            <a href="{{ url_for('main.index') }}">Volver a la Portada Principal</a>
         </div>
 
     </main>

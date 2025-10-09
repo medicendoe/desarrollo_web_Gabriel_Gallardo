@@ -12,9 +12,9 @@
         <h1>Listado de Avisos de Adopción</h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('index') }}">Volver a la Portada</a></li>
-                <li><a href="{{ url_for('agregar_aviso') }}">Agregar aviso de adopción</a></li>
-                <li><a href="{{ url_for('estadisticas') }}">Estadísticas</a></li>
+                <li><a href="{{ url_for('main.index') }}">Volver a la Portada</a></li>
+                <li><a href="{{ url_for('main.agregar_aviso') }}">Agregar aviso de adopción</a></li>
+                <li><a href="{{ url_for('main.estadisticas') }}">Estadísticas</a></li>
             </ul>
         </nav>
     </header>
@@ -50,13 +50,10 @@
                     {% for aviso in avisos.items %}
                     <tr data-id="{{ aviso.id }}">
                         <td>{{ aviso.fecha_ingreso.strftime('%Y-%m-%d') }}</td>
-                        <td>{{ aviso.fecha_entrega.strftime('%Y-%m-%d') }}</td>
-                        <td>{{ aviso.comuna.nombre }}</td>
-                        <td>{{ aviso.sector or '' }}</td>
-                        <td>
-                            {{ aviso.cantidad }} {{ aviso.tipo }}{% if aviso.cantidad > 1 %}s{% endif %} 
-                            de {{ aviso.edad }} {% if aviso.unidad_medida == 'a' %}año{% else %}mes{% endif %}{% if aviso.edad > 1 %}{% if aviso.unidad_medida == 'a' %}s{% else %}es{% endif %}{% endif %}
-                        </td>
+                        <td>{{ aviso.fecha_entrega.strftime('%Y-%m-%d') if aviso.fecha_entrega else 'Sin especificar' }}</td>
+                        <td>{{ aviso.comuna.nombre if aviso.comuna else 'Sin especificar' }}</td>
+                        <td>{{ aviso.sector or 'Sin especificar' }}</td>
+                        <td>{{ aviso.cantidad }} {{ aviso.tipo }}{% if aviso.cantidad > 1 %}s{% endif %} de {{ aviso.edad }} {% if aviso.unidad_medida == 'a' %}año{% else %}mes{% endif %}{% if aviso.edad > 1 %}{% if aviso.unidad_medida == 'a' %}s{% else %}es{% endif %}{% endif %}</td>
                         <td>{{ aviso.nombre }}</td>
                         <td>{{ aviso.fotos|length or 0 }}</td>
                     </tr>
@@ -115,13 +112,13 @@
         {% if avisos.pages > 1 %}
         <div class="pagination">
             {% if avisos.has_prev %}
-                <a href="{{ url_for('listado_avisos', page=avisos.prev_num, tipo=tipo_filtro, region=region_filtro) }}">&laquo; Anterior</a>
+                <a href="{{ url_for('main.listado_avisos', page=avisos.prev_num, tipo=tipo_filtro, region=region_filtro) }}">&laquo; Anterior</a>
             {% endif %}
             
             {% for page_num in avisos.iter_pages() %}
                 {% if page_num %}
                     {% if page_num != avisos.page %}
-                        <a href="{{ url_for('listado_avisos', page=page_num, tipo=tipo_filtro, region=region_filtro) }}">{{ page_num }}</a>
+                        <a href="{{ url_for('main.listado_avisos', page=page_num, tipo=tipo_filtro, region=region_filtro) }}">{{ page_num }}</a>
                     {% else %}
                         <span class="current">{{ page_num }}</span>
                     {% endif %}
@@ -131,7 +128,7 @@
             {% endfor %}
             
             {% if avisos.has_next %}
-                <a href="{{ url_for('listado_avisos', page=avisos.next_num, tipo=tipo_filtro, region=region_filtro) }}">Siguiente &raquo;</a>
+                <a href="{{ url_for('main.listado_avisos', page=avisos.next_num, tipo=tipo_filtro, region=region_filtro) }}">Siguiente &raquo;</a>
             {% endif %}
         </div>
         {% endif %}
@@ -150,7 +147,7 @@
             <h3>Fotos</h3>
             <div id="detalle-fotos" class="galeria-fotos">
             </div>
-            <a href="{{ url_for('index') }}" class="boton-modal">Volver a la Portada</a>
+            <a href="{{ url_for('main.index') }}" class="boton-modal">Volver a la Portada</a>
         </div>
     </div>
 
