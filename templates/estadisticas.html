@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas de Adopción</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
@@ -12,14 +12,24 @@
         <h1>Estadísticas del Portal</h1>
         <nav>
             <ul>
-                <li><a href="index.html">Volver a la Portada</a></li>
-                <li><a href="agregar-aviso.html">Agregar aviso de adopción</a></li>
-                <li><a href="listado-avisos.html">Ver listado de adopciones</a></li>
+                <li><a href="{{ url_for('main.index') }}">Volver a la Portada</a></li>
+                <li><a href="{{ url_for('main.agregar_aviso') }}">Agregar aviso de adopción</a></li>
+                <li><a href="{{ url_for('main.listado_avisos') }}">Ver listado de adopciones</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="messages">
+                    {% for category, message in messages %}
+                        <div class="message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <h2>Visualización de Datos</h2>
         <p>Aquí presentamos algunas estadísticas sobre los avisos de adopción registrados en nuestro portal.</p>
 
@@ -37,10 +47,19 @@
         <section class="grafico-container">
             <h3>Distribución por Tipo de Mascota</h3>
             <p>Este gráfico muestra el porcentaje total de avisos correspondientes a gatos y perros.</p>
-            <img 
-                src="https://quickchart.io/chart?c=%7B%22type%22%3A%22pie%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Gatos%22%2C%22Perros%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Tipos%20de%20Mascota%22%2C%22data%22%3A%5B65%2C80%5D%2C%22backgroundColor%22%3A%5B%22rgba%28255%2C%2099%2C%20132%2C%200.8%29%22%2C%22rgba%2854%2C%20162%2C%20235%2C%200.8%29%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Distribuci%5Cu00f3n%20por%20Tipo%20de%20Mascota%22%7D%7D%7D" 
-                alt="Gráfico de torta que muestra el total de avisos por tipo de mascota (gato o perro)."
-                style="max-width: 100%; max-height: 400px; height: auto; border: 1px solid #ccc;">
+            {% if stats_tipo %}
+                {% set gatos = stats_tipo|selectattr(0, 'equalto', 'gato')|map(attribute=1)|sum %}
+                {% set perros = stats_tipo|selectattr(0, 'equalto', 'perro')|map(attribute=1)|sum %}
+                <img 
+                    src="https://quickchart.io/chart?c=%7B%22type%22%3A%22pie%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Gatos%22%2C%22Perros%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Tipos%20de%20Mascota%22%2C%22data%22%3A%5B{{ gatos|default(0) }}%2C{{ perros|default(0) }}%5D%2C%22backgroundColor%22%3A%5B%22rgba%28255%2C%2099%2C%20132%2C%200.8%29%22%2C%22rgba%2854%2C%20162%2C%20235%2C%200.8%29%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Distribuci%5Cu00f3n%20por%20Tipo%20de%20Mascota%22%7D%7D%7D" 
+                    alt="Gráfico de torta que muestra el total de avisos por tipo de mascota (gato o perro)."
+                    style="max-width: 100%; max-height: 400px; height: auto; border: 1px solid #ccc;">
+            {% else %}
+                <img 
+                    src="https://quickchart.io/chart?c=%7B%22type%22%3A%22pie%22%2C%22data%22%3A%7B%22labels%22%3A%5B%22Gatos%22%2C%22Perros%22%5D%2C%22datasets%22%3A%5B%7B%22label%22%3A%22Tipos%20de%20Mascota%22%2C%22data%22%3A%5B65%2C80%5D%2C%22backgroundColor%22%3A%5B%22rgba%28255%2C%2099%2C%20132%2C%200.8%29%22%2C%22rgba%2854%2C%20162%2C%20235%2C%200.8%29%22%5D%7D%5D%7D%2C%22options%22%3A%7B%22title%22%3A%7B%22display%22%3Atrue%2C%22text%22%3A%22Distribuci%5Cu00f3n%20por%20Tipo%20de%20Mascota%22%7D%7D%7D" 
+                    alt="Gráfico de torta que muestra el total de avisos por tipo de mascota (gato o perro)."
+                    style="max-width: 100%; max-height: 400px; height: auto; border: 1px solid #ccc;">
+            {% endif %}
         </section>
 
         <hr>
@@ -57,13 +76,14 @@
         <hr>
 
         <div class="navegacion-final">
-            <a href="index.html">Volver a la Portada Principal</a>
+            <a href="{{ url_for('main.index') }}">Volver a la Portada Principal</a>
         </div>
 
     </main>
 
     <footer>
         <p>Desarrollo de Aplicaciones Web - Tarea 1</p>
+        <p>Gabriel Gallardo R.</p>
     </footer>
 
 </body>
